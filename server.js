@@ -11,6 +11,9 @@ let jsonData = {
 //express server
 const express = require('express');
 const fs = require('fs');
+const Transform = require('stream').Transform;
+const _ = require('underscore');
+const parse = new Transform();
 let app = express();
 
 app.set('view engine', 'ejs');
@@ -19,10 +22,10 @@ app.set('view engine', 'ejs');
 app.use(
     ((data) => {
         return (request, response, callback) => {
-            console.log('response has set data to: ', data);
-            request.body = {};
-            request.body.count = data.count;
-            request.body.message = data.message;
+            request.body = {
+                count: data.count,
+                message: data.message
+            };
             callback();
         }
     })(jsonData)
@@ -30,23 +33,29 @@ app.use(
 
 //entry point
 app.get('/', (request, response) => {
-    // synchronously processes the view language
-    // response.sendFile(__dirname + '/index.html', () => {
-
-    // });
-    // response.send(` 
-    //   ${request.user.name} + ${request.body.count} + ${request.body.message}
-    // `);
     fs.readFile('index.html', (err, buffer) => {
         if (err) console.log(err);
+        let map = {};
         let html = buffer.toString();
+        let re = /[$]{([^}]*)}/g;
+        // map assigns values to replace
+        html.match(re).forEach((el, idx) => {
+            map[el] = el.substring(2, el.length - 1);;
+        });
+        // replaces html
+        _.each(map, (attr, idx) => {
+            let name = map[idx].replace('request.body.', '');
+            html = html.replace(idx, request.body[name]);
+        });
 
-        response.send(`
-        {
-           count: ${request.body.count},
-           message: ${request.body.message}
-        } + ${html}`);
+        response.send(html);
     });
+    // synchronously processes the view language
+    // response.sendFile(__dirname + '/index.html', () => {});
+    // app.use('/index.html', (req, res) => {
+    //     fs.createReadStream('index.html')
+    //         .pipe(res);
+    // });
 });
 
 app.get('/data', (request, response) => {
