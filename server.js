@@ -11,9 +11,7 @@ let jsonData = {
 //express server
 const express = require('express');
 const fs = require('fs');
-const Transform = require('stream').Transform;
 const _ = require('underscore');
-const parse = new Transform();
 let app = express();
 
 app.set('view engine', 'ejs');
