@@ -2,14 +2,15 @@ const app = require('./server');
 const request = require('supertest');
 const expect = require('chai').expect;
 global.assert = require('assert');
+require('colors');
 
 // TODO: make tests for the other CRUD routes
 // DELETE, UPDATE, PUT, GET ONE
 // to run the test type mocha server/specs.js
 
-describe('[LIONS]', function() {
+describe('[LIONS]'.rainbow, function() {
 
-    it('should get all lions', function(done) {
+    it('should get all lions'.blue, function(done) {
         request(app)
             .get('/lions')
             .set('Accept', 'application/json')
@@ -22,12 +23,12 @@ describe('[LIONS]', function() {
     });
 })
 
-describe('[TIGERS]', () => {
+describe('[TIGERS]'.rainbow, () => {
     beforeEach(() => {
         console.log('initiating tigers test..');
     });
 
-    it('should ADD a tiger', (done) => {
+    it('should ADD a tiger'.red, (done) => {
         request(app)
             .post('/tigers')
             .send({
@@ -50,7 +51,7 @@ describe('[TIGERS]', () => {
             })
     });
 
-    it('should return ARRAY of tigers of length greater than 0', (done) => {
+    it('should return ARRAY of tigers of length greater than 0'.green, (done) => {
         request(app)
             .get('/tigers')
             .set('Accept', 'application/json')
@@ -64,7 +65,7 @@ describe('[TIGERS]', () => {
             })
     });
 
-    it('should get a single tiger with id = 1', (done) => {
+    it('should get a single tiger with id = 1'.cyan, (done) => {
         request(app)
             .get('/tigers/1')
             .set('Accept', 'application/json')
@@ -81,7 +82,7 @@ describe('[TIGERS]', () => {
             })
     });
 
-    it('should change the attributes of the first tiger', (done) => {
+    it('should change the attributes of the first tiger'.yellow, (done) => {
         request(app)
             .put('/tigers/1')
             .send({
@@ -99,7 +100,7 @@ describe('[TIGERS]', () => {
                 done();
             })
     });
-    it('should create then delete a tiger', (done) => {
+    it('should create then delete a tiger'.blue, (done) => {
         request(app)
             .post('/tigers')
             .send({
