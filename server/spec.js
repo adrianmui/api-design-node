@@ -23,7 +23,7 @@ describe('[LIONS]', function() {
 })
 
 describe('[TIGERS]', () => {
-    before(() => {
+    beforeEach(() => {
         console.log('initiating tigers test..');
     });
 
