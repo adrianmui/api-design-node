@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 var PostSchema = new Schema({
     title: {
         type: String,
+        unique: true,
         required: true
     },
     text: {
@@ -13,13 +14,13 @@ var PostSchema = new Schema({
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: user,
         required: true
     },
-    categories: {
-        type: [],
-        required: true
-    }
+    categories: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: categories
+    }]
 });
 
 module.exports = mongoose.model('post', PostSchema);
-"title": "What's new in Angular 4",
