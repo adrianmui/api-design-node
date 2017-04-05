@@ -1,12 +1,16 @@
-var _ = require('lodash');
+const _ = require('lodash');
 
 // deafult config object for our api
-var config = {
-  /* just placing the name of our possible NODE_ENV values for later*/
-  dev: 'development',
-  test: 'testing',
-  prod: 'production',
-  port: process.env.PORT || 3000
+let config = {
+    /* just placing the name of our possible NODE_ENV values for later*/
+    env: process.env.NODE_ENV || 'development',
+    secrets: {
+
+    },
+    dev: 'development',
+    test: 'testing',
+    prod: 'production',
+    port: process.env.PORT || 3000
 };
 
 // check to see if the NODE_ENV was set, if not, the set it to dev
@@ -21,6 +25,6 @@ config.env = process.env.NODE_ENV;
 // conditionally load in another config file depending on what
 // env we are in. We then merge those objects with the env config overriting
 // the default config if here. We then export that new object for our app to use
-var envConfig;
+var envConfig = require('./' + config.env);
 
 module.exports = _.merge(config, envConfig);
