@@ -1,5 +1,5 @@
 var router = require('express').Router();
-var logger = require('../../util/logger');
+
 
 const userCtrl = require('./userController');
 // setup boilerplate route jsut to satisfy a request

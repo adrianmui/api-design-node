@@ -19,14 +19,17 @@ postCtrl.params = function(req, res, next, id) {
 
 postCtrl.get = function(req, res, next) {
     logger.log('postCtrl.get');
-    Post.find().then((Post) => {
-        if (Post.length <= 0) {
-            logger.log('mongoose not found');
-            res.status(404).send('404 ERROR Post NOT FOUND');
-        } else {
-            res.send(Post);
-        }
-    });
+    Post.find()
+        .populate('author categories')
+        .exec()
+        .then((Post) => {
+            if (Post.length <= 0) {
+                logger.log('mongoose not found');
+                res.status(404).send('404 ERROR Post NOT FOUND');
+            } else {
+                res.send(Post);
+            }
+        });
 };
 
 postCtrl.getOne = function(req, res, next) {
@@ -50,7 +53,7 @@ postCtrl.put = function(req, res, next) {
 
 postCtrl.post = function(req, res, next) {
     var newpost = req.body;
-
+    console.log(newpost);
     Post.create(newpost)
         .then(function(post) {
             res.json(post);

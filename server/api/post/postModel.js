@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+//belongs_to  authors
+//belongs_to  categories
 var PostSchema = new Schema({
     title: {
         type: String,
@@ -13,7 +15,7 @@ var PostSchema = new Schema({
         required: true
     },
     // array of ids from the users
-    author: [{ type: Schema.Types.ObjectId, ref: 'user' }],
+    author: { type: Schema.Types.ObjectId, ref: 'user' },
 
     categories: [{ type: Schema.Types.ObjectId, ref: 'category' }]
 });

@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const logger = require('../../util/logger');
+
 const categoryCtrl = require('./categoryController');
 // setup boilerplate route jsut to satisfy a request
 // for building
