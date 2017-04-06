@@ -5,6 +5,8 @@ let postCtrl = {};
 
 postCtrl.params = function(req, res, next, id) {
     Post.findById(id)
+        .populate('author categories')
+        .exec()
         .then(function(post) {
             if (!post) {
                 next(new Error('No post with that id'));
