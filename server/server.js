@@ -13,7 +13,7 @@ app.use('/api/', api);
 
 // set up global error handling
 app.use((err, req, res, next) => {
-    console.log('error message: ', err);
+    logger.log('error message: ', err);
     if (err) {
         res.status(500).send(err);
     }

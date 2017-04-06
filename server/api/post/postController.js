@@ -1,62 +1,72 @@
 var Post = require('./postModel');
 var _ = require('lodash');
 
-exports.params = function(req, res, next, id) {
-  Post.findById(id)
-    .then(function(post) {
-      if (!post) {
-        next(new Error('No post with that id'));
-      } else {
-        req.post = post;
-        next();
-      }
-    }, function(err) {
-      next(err);
+let postCtrl = {};
+
+postCtrl.params = function(req, res, next, id) {
+    Post.findById(id)
+        .then(function(post) {
+            if (!post) {
+                next(new Error('No post with that id'));
+            } else {
+                req.post = post;
+                next();
+            }
+        }, function(err) {
+            next(err);
+        });
+};
+
+postCtrl.get = function(req, res, next) {
+    logger.log('postCtrl.get');
+    Post.find().then((Post) => {
+        if (Post.length <= 0) {
+            logger.log('mongoose not found');
+            res.status(404).send('404 ERROR Post NOT FOUND');
+        } else {
+            res.send(Post);
+        }
     });
 };
 
-exports.get = function(req, res, next) {
-  // need to populate here
+postCtrl.getOne = function(req, res, next) {
+    res.json(req.post);
 };
 
-exports.getOne = function(req, res, next) {
-  var post = req.post;
-  res.json(post);
+postCtrl.put = function(req, res, next) {
+    var post = req.post;
+    var update = req.body;
+
+    _.merge(post, update);
+
+    post.save(function(err, saved) {
+        if (err) {
+            next(err);
+        } else {
+            res.json(saved);
+        }
+    })
 };
 
-exports.put = function(req, res, next) {
-  var post = req.post;
+postCtrl.post = function(req, res, next) {
+    var newpost = req.body;
 
-  var update = req.body;
-
-  _.merge(post, update);
-
-  post.save(function(err, saved) {
-    if (err) {
-      next(err);
-    } else {
-      res.json(saved);
-    }
-  })
+    Post.create(newpost)
+        .then(function(post) {
+            res.json(post);
+        }, function(err) {
+            next(err);
+        });
 };
 
-exports.post = function(req, res, next) {
-  var newpost = req.body;
-
-  Post.create(newpost)
-    .then(function(post) {
-      res.json(post);
-    }, function(err) {
-      next(err);
+postCtrl.delete = function(req, res, next) {
+    req.post.remove(function(err, removed) {
+        if (err) {
+            next(err);
+        } else {
+            res.json(removed);
+        }
     });
 };
 
-exports.delete = function(req, res, next) {
-  req.post.remove(function(err, removed) {
-    if (err) {
-      next(err);
-    } else {
-      res.json(removed);
-    }
-  });
-};
+module.exports = postCtrl;

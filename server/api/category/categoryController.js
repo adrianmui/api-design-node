@@ -1,10 +1,9 @@
 const Category = require('./categoryModel');
 const _ = require('lodash');
 
-let categoryController = {};
+let categoryCtrl = {};
 
-categoryController.params = (req, res, next, id) => {
-    console.log('id: ', id);
+categoryCtrl.params = (req, res, next, id) => {
     // use the id and attach the category to req
     Category.findById(id)
         .then((category) => {
@@ -15,11 +14,11 @@ categoryController.params = (req, res, next, id) => {
         });
 };
 
-categoryController.get = (req, res, next) => {
-    console.log('categoryController.get');
+categoryCtrl.get = (req, res, next) => {
+    logger.log('categoryCtrl.get');
     Category.find().then((category) => {
         if (category.length <= 0) {
-            console.log('mongoose not found');
+            logger.log('mongoose not found');
             res.status(404).send('404 ERROR CATEGORY NOT FOUND');
         } else {
             res.send(category);
@@ -27,12 +26,12 @@ categoryController.get = (req, res, next) => {
     });
 };
 
-categoryController.getOne = (req, res, next) => {
-    console.log('categoryController.getOne');
+categoryCtrl.getOne = (req, res, next) => {
+    logger.log('categoryCtrl.getOne');
     res.json(res.category);
 };
 
-categoryController.put = (req, res, next) => {
+categoryCtrl.put = (req, res, next) => {
     let category = req.category;
     let update = req.body;
 
@@ -47,9 +46,8 @@ categoryController.put = (req, res, next) => {
     })
 };
 
-categoryController.post = (req, res, next) => {
+categoryCtrl.post = (req, res, next) => {
     let newcategory = req.body;
-    let a = JSON.stringify(req.body);
 
     Category.create(newcategory)
         .then((category) => {
@@ -59,7 +57,7 @@ categoryController.post = (req, res, next) => {
         });
 };
 
-categoryController.delete = (req, res, next) => {
+categoryCtrl.delete = (req, res, next) => {
     req.category.remove((err, removed) => {
         if (err) {
             next(err);
@@ -69,4 +67,4 @@ categoryController.delete = (req, res, next) => {
     });
 };
 
-module.exports = categoryController;
+module.exports = categoryCtrl;
