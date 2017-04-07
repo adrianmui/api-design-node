@@ -4,6 +4,7 @@ var signToken = require('../../auth/auth').signToken;
 
 exports.params = function(req, res, next, id) {
     User.findById(id)
+        .exec()
         .then(function(user) {
             if (!user) {
                 next(new Error('No user with that id'));
@@ -18,8 +19,9 @@ exports.params = function(req, res, next, id) {
 
 exports.get = function(req, res, next) {
     User.find({})
+        .exec()
         .then(function(users) {
-            res.json(users);
+            res.json(users.toJson());
         }, function(err) {
             next(err);
         });
@@ -27,7 +29,7 @@ exports.get = function(req, res, next) {
 
 exports.getOne = function(req, res, next) {
     var user = req.user;
-    res.json(user);
+    res.json(user.toJson());
 };
 
 exports.put = function(req, res, next) {
@@ -41,7 +43,7 @@ exports.put = function(req, res, next) {
         if (err) {
             next(err);
         } else {
-            res.json(saved);
+            res.json(saved.toJson());
         }
     })
 };
@@ -62,7 +64,11 @@ exports.delete = function(req, res, next) {
         if (err) {
             next(err);
         } else {
-            res.json(removed);
+            res.json(removed.toJson());
         }
     });
+};
+
+exports.me = (req, res, next) => {
+    res.json(req.user.toJson());
 };

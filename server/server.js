@@ -8,7 +8,7 @@ var auth = require('./auth/routes');
 require('mongoose').connect(config.db.url);
 
 if (config.seed) {
-  require('./util/seed');
+    require('./util/seed');
 }
 // setup the app middlware
 require('./middleware/appMiddlware')(app);
@@ -19,14 +19,14 @@ app.use('/auth', auth);
 // set up global error handling
 
 app.use(function(err, req, res, next) {
-  // if error thrown from jwt validation check
-  if (err.name === 'UnauthorizedError') {
-    res.status(401).send('Invalid token');
-    return;
-  }
+    // if error thrown from jwt validation check
+    if (err.name === 'UnauthorizedError') {
+        res.status(401).send(err);
+        return;
+    }
 
-  logger.error(err.stack);
-  res.status(500).send('Oops');
+    logger.error(err.stack);
+    res.status(500).send(err.stack);
 });
 
 // export the app for testing

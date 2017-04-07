@@ -1,18 +1,20 @@
-var router = require('express').Router();
-var logger = require('../../util/logger');
-var controller = require('./postController');
-var auth = require('../../auth/auth');
+const router = require('express').Router();
+const logger = require('../../util/logger');
+const controller = require('./postController');
+const auth = require('../../auth/auth');
+
+let checkUser = [auth.decodeToken(), auth.getFreshUser()];
 
 // lock down the right routes :)
 router.param('id', controller.params);
 
 router.route('/')
     .get(controller.get)
-    .post([auth.getFreshUser(), auth.decodeToken(), auth.verifyUser()], controller.post);
+    .post(checkUser, controller.post);
 
 router.route('/:id')
-    .get(controller.getOne)
-    .put(controller.put)
-    .delete(controller.delete)
+    .get(checkUser, controller.getOne)
+    .put(checkUser, controller.put)
+    .delete(checkUser, controller.delete)
 
 module.exports = router;

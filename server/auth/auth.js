@@ -1,10 +1,12 @@
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 var config = require('../config/config');
+
 var checkToken = expressJwt({ secret: config.secrets.jwt });
 var User = require('../api/user/userModel');
 
 exports.decodeToken = function() {
+    console.log('decode token');
     return function(req, res, next) {
         // make it optional to place token on query string
         // if it is, place it on the headers where it should be
@@ -17,11 +19,13 @@ exports.decodeToken = function() {
         // this will call next if token is valid
         // and send error if its not. It will attached
         // the decoded token to req.user
+        res.send(`${req.user}`);
         checkToken(req, res, next);
     };
 };
 
 exports.getFreshUser = function() {
+    console.log('getFreshUser');
     return function(req, res, next) {
         User.findById(req.user._id)
             .then(function(user) {
@@ -86,9 +90,18 @@ exports.verifyUser = function() {
     };
 };
 
+
 // util method to sign tokens on signup
 exports.signToken = function(id) {
+    console.log('signedToken!');
+    console.log('jwt secret code is: ' + config.secrets.jwt);
     return jwt.sign({ _id: id },
-        config.secrets.jwt, { expiresInMinutes: config.expireTime }
-    );
+        config.secrets.jwt, [{ algorithm: 'HS256' }, { expiresIn: '1h' },
+            (err, token) => {
+                console.log('adrians token is: ' + token);
+                if (err) {
+                    next(new Error(err.message));
+                }
+            }
+        ]);
 };
