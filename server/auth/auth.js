@@ -96,6 +96,6 @@ exports.verifyUser = () => {
 // util method to sign tokens on signup
 exports.signToken = (id) => {
     return jwt.sign({ _id: id },
-        config.secrets.jwt, { expiresInMinutes: config.expireTime }
+        config.secrets.jwt, { expiresIn: config.expireTime }
     );
 };

@@ -14,7 +14,7 @@ router.route('/')
           /* Bordered form */
           form {
               border: 3px solid #009688;
-              margin: 5% 30% 0 30%;
+              margin: 5% 27.5% 0 27.5%;
               background-color: white;
           }
 

@@ -12,7 +12,7 @@ exports.signin = function(req, res, next) {
     // req.query.access_token = signedToken;
     // next();
 
-    res.send({
+    res.json({
         token: signedToken
     });
 };
