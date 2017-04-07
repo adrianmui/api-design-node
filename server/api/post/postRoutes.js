@@ -7,12 +7,12 @@ var auth = require('../../auth/auth');
 router.param('id', controller.params);
 
 router.route('/')
-  .get(controller.get)
-  .post(controller.post)
+    .get(controller.get)
+    .post([auth.getFreshUser(), auth.decodeToken(), auth.verifyUser()], controller.post);
 
 router.route('/:id')
-  .get(controller.getOne)
-  .put(controller.put)
-  .delete(controller.delete)
+    .get(controller.getOne)
+    .put(controller.put)
+    .delete(controller.delete)
 
 module.exports = router;
